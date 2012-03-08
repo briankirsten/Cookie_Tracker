@@ -9,7 +9,7 @@ $begin_epoch = strtotime("7 July 2002");
 
 $epoch = time();
 
-$genID = getSeqID();
+$genID = getSeqID_MongoDB();
 
 $seq_id = $genID % 1024;
 
@@ -35,7 +35,32 @@ if($callBack == "")
 	echo $callBack . "(". $jsonStr .")";
 }
 
-function getSeqID()
+function getSeqID_MongoDB()
+{
+	$con = new Mongo("mongodb://127.0.0.1"); // Connect to Mongo Server
+	$db = $con->selectDB("cookie_tracker"); // Connect to Database
+	$coll = $db->selectCollection("trk_tracker"); //Select the collection
+	
+	$autoReturn = $coll->findOne(array("sitetracker" => "autoid"));
+	
+	if(is_null($autoReturn))
+	{
+	
+		$autoid = array("sitetracker"=>"autoid", "seq" => 1);
+
+		$coll->insert($autoid);
+		
+	}
+	
+	$coll->update(array("sitetracker" => "autoid"), array('$inc' => array('seq' => 1)));
+	
+	$con->close();
+	
+	return $autoReturn["seq"];
+	
+} //end getSeqIDMongo
+
+function getSeqID_MySQL()
 {
 	
 	$id = 0;
@@ -59,4 +84,4 @@ function getSeqID()
 	mysql_close($link);
 	
 	return $id;
-}
+} //end getSeqID
