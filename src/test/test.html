@@ -15,14 +15,36 @@
 		var tracker_config = {
 			domain: 'http://localhost:8896',
 			cookiename: 'trkit_tracker',
-			cookie_expiration: 365
+			cookie_expiration: 365,
+			varsToTrack : []
 		};
+		
+		var affiliateTracker = {
+			table : "nm_affiliate_program",
+			db : "nm_affiliate_program",
+			params : [],
+			additionalVars : []
+		}
+		
+		var addVar = {
+			key : "aff_program",
+			value : "initial",
+			checkVal : true
+		}
+		
+		affiliateTracker.additionalVars.push(addVar);
+		
+		affiliateTracker.params.push("hitid");
+		
+		affiliateTracker.params.push("cid");
+		
+		tracker_config.varsToTrack.push(affiliateTracker);
+		
 	//-->
 	</script>
 	
 </head>
 <body>
-
 
 <script type="text/javascript" src="http://localhost:8896/js/cookiegen.js"></script>
 </body>
